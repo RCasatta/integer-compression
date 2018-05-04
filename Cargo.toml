@@ -1,0 +1,7 @@
+[package]
+name = "integer-compression"
+version = "0.1.0"
+authors = ["Riccardo Casatta <riccardo@casatta.it>"]
+
+[dependencies]
+rand = "0.3"
