@@ -5,3 +5,4 @@ authors = ["Riccardo Casatta <riccardo@casatta.it>"]
 
 [dependencies]
 rand = "0.3"
+rayon = "1.0.1"

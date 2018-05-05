@@ -1,10 +1,13 @@
 extern crate rand;
+extern crate rayon;
 
 use rand::Rng;
 use std::collections::HashSet;
 use std::iter::FromIterator;
 use std::ops::Sub;
 use std::cmp::Ordering;
+use rayon::prelude::*;
+
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 struct U40 ([u8; 5]);  // BIG ENDIAN most significant byte is the first
@@ -67,7 +70,7 @@ fn main() {
         println!("% Collisions {:.2}%",  (1f64- (set.len() as f64 / *n as f64))*100f64   );
 
         //println!("{:?}",vec);
-        vec.sort();
+        vec.par_sort_unstable();
         //println!("{:?}",vec);
 
         let mut total = 0u64;
@@ -93,7 +96,7 @@ fn main() {
 
         let mut size: u32 = 0;
         for i in 0..5 {
-            size += counters[i]*i as u32;
+            size += counters[i]*(i+1) as u32;
         }
         size += *n as u32 * 3; // adding height encoding in 3 bytes
         let mb_size = size as f64 / 2f64.powf(20f64);
@@ -116,7 +119,7 @@ fn main() {
         println!("% Collisions {:.2}%",  (1f64- (set.len() as f64 / *n as f64))*100f64   );
 
         //println!("{:?}",vec);
-        vec.sort();
+        vec.par_sort_unstable();
         //println!("{:?}",vec);
 
         let mut total = 0u64;
@@ -142,7 +145,7 @@ fn main() {
 
         let mut size: u32 = 0;
         for i in 0..5 {
-            size += counters[i]*i as u32;
+            size += counters[i]*(i+1) as u32;
         }
         size += *n as u32 * 3; // adding height encoding in 3 bytes
         let mb_size = size as f64 / 2f64.powf(20f64);
