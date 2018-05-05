@@ -57,7 +57,7 @@ fn main() {
     let n_vec  = [1_000_000usize,15_000_000,50_000_000,100_000_000,200_000_000,400_000_000,800_000_000];
 
     for n in n_vec.iter() {
-        println!("n {}", n);
+        println!("n {} U40", n);
         //let mut vec = init_u32_random_vec(*n);
         let mut vec = init_U40_random_vec(*n);
         //let set : HashSet<u32> = HashSet::from_iter(vec.iter().cloned());
@@ -99,6 +99,56 @@ fn main() {
         let mb_size = size as f64 / 2f64.powf(20f64);
         let mb_size_orig = (n*8) as f64 / 2f64.powf(20f64);
         println!("Filter Size {:.2}Mb ({:.2}%)", mb_size,  (mb_size/ mb_size_orig)*100f64 );
+        println!("--------")
+        //println!("Collision adjusted {:.2}Mb", collision as f64 * 1f64) //considering a 1Mb block
+    }
+
+
+
+    for n in n_vec.iter() {
+        println!("n {} u32", n);
+        //let mut vec = init_u32_random_vec(*n);
+        let mut vec = init_u32_random_vec(*n);
+        //let set : HashSet<u32> = HashSet::from_iter(vec.iter().cloned());
+        let set : HashSet<u32> = HashSet::from_iter(vec.iter().cloned());
+        //let _collisions = vec.len() - set.len();
+
+        println!("% Collisions {:.2}%",  (1f64- (set.len() as f64 / *n as f64))*100f64   );
+
+        //println!("{:?}",vec);
+        vec.sort();
+        //println!("{:?}",vec);
+
+        let mut total = 0u64;
+        let mut counters = [0u32; 5];
+        for i in 0..n-1 {
+            let delta = vec[i + 1] - vec[i];
+            if delta < 2u32.pow(7) {
+                counters[0]+=1;
+            } else if delta < 2u32.pow(14) {
+                counters[1]+=1;
+            } else if delta < 2u32.pow(21) {
+                counters[2]+=1;
+            } else if delta < 2u32.pow(28) {
+                counters[3]+=1;
+            } else {
+                counters[4]+=1;
+            }
+            total = total + delta as u64;
+        }
+
+        println!("avg:{:?}", (total as f64 / (n-1) as f64 ));
+        println!("counters:{:?}", counters) ;
+
+        let mut size: u32 = 0;
+        for i in 0..5 {
+            size += counters[i]*i as u32;
+        }
+        size += *n as u32 * 3; // adding height encoding in 3 bytes
+        let mb_size = size as f64 / 2f64.powf(20f64);
+        let mb_size_orig = (n*8) as f64 / 2f64.powf(20f64);
+        println!("Filter Size {:.2}Mb ({:.2}%)", mb_size,  (mb_size/ mb_size_orig)*100f64 );
+        println!("--------")
         //println!("Collision adjusted {:.2}Mb", collision as f64 * 1f64) //considering a 1Mb block
     }
 }
