@@ -6,3 +6,5 @@ authors = ["Riccardo Casatta <riccardo@casatta.it>"]
 [dependencies]
 rand = "0.3"
 rayon = "1.0.1"
+data-encoding = "2.1.1"
+sha2 = "0.7.1"
